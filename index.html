@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App</title>
+  </head>
+  <body>
+    <div id="inputArea">
+      <textarea id="textForAnalysis" rows="10" cols="40"></textarea><br />
+      <button onclick="analyze()">Click to analyze</button>
+    </div>
+
+    <div id="app"></div>
+
+    <script>
+      // model
+      const app = document.getElementById("app");
+      const textField = document.getElementById("textForAnalysis");
+      let letterCounts = {};
+      let sortedLetterCountsDesc = {};
+
+      // view
+      function view() {
+        let output = "<br />";
+        for (const key of Object.keys(sortedLetterCountsDesc)) {
+          output += `${key}: ${sortedLetterCountsDesc[key]}<br />`;
+        }
+        app.innerHTML = output;
+      }
+
+      // controller
+      function analyze() {
+        let userInput = textField.value.toLowerCase();
+        letterCounts = {};
+
+        for (let i = 0; i < userInput.length; i++) {
+          let char = userInput[i];
+          if (/[a-z]/.test(char)) {
+            if (letterCounts[char]) {
+              letterCounts[char]++;
+            } else {
+              letterCounts[char] = 1;
+            }
+          }
+        }
+
+        sortedLetterCountsDesc = Object.keys(letterCounts)
+          .sort((a, b) => letterCounts[b] - letterCounts[a])
+          .reduce((obj, key) => {
+            obj[key] = letterCounts[key];
+            return obj;
+          }, {});
+
+        view();
+      }
+    </script>
+  </body>
+</html>
